@@ -22,13 +22,13 @@ loadMoreBtn.addEventListener('click', onLoadMore);
 loadMoreBtn.classList.add('is-hidden');
 function fetchImagesSearch(e) { 
     e.preventDefault();
-    searchQuery = e.currentTarget.elements.searchQuery.value;
+    searchQuery = e.currentTarget.elements.searchQuery.value.trim();
     page = 1;
     galleryContainer.innerHTML = '';
     
-    console.log(searchQuery);
+    // console.log(searchQuery);
 
-    if (searchQuery === '') { 
+    if (!searchQuery) { 
         return
     };
 
