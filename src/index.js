@@ -13,7 +13,7 @@ const loadMoreBtn = document.querySelector('.load-more');
 let simpleLightBox;
 let page = 1;
 let searchQuery = '';
-// let images = [];
+const perPage = 40;
 
 searchForm.addEventListener('submit', fetchImagesSearch);
 loadMoreBtn.addEventListener('click', onLoadMore);
@@ -32,7 +32,7 @@ function fetchImagesSearch(e) {
         return
     };
 
-    fetchImages(searchQuery, page).then(({ data }) => {
+    fetchImages(searchQuery, page, perPage).then(({ data }) => {
         
             if (data.totalHits === 0) {
                 Notify.failure("Sorry, there are no images matching your search query. Please try again.");  
@@ -43,7 +43,7 @@ function fetchImagesSearch(e) {
                 createGalleryMarkup(data.hits);
                 simpleLightBox = new SimpleLightbox('.gallery a', { captionsData: 'alt', captionDelay: 250, }).refresh(); 
             }
-        if (data.totalHits > 40) {
+        if (data.totalHits > perPage) {
             loadMoreBtn.classList.remove('is-hidden');
         }
             
@@ -53,19 +53,24 @@ function fetchImagesSearch(e) {
 };
 
 function onLoadMore() {
-    page += 1;
-fetchImages(searchQuery, page)
-    .then(({ data }) => {
-      createGalleryMarkup(data.hits);
-        simpleLightBox.refresh();
-        
-      if (data.hits.length < 40) {
-         Notify.info("We're sorry, but you've reached the end of search results.");
-         loadMoreBtn.classList.add('is-hidden');
-            }
+  page += 1;
+fetchImages(searchQuery, page, perPage)
+  .then(({data}) => {
+    
+    createGalleryMarkup(data.hits);
+    const totalPages = Math.ceil(data.totalHits / perPage);
+    simpleLightBox.refresh();
+
+    if (page === totalPages) {
+    
+      Notify.info("We're sorry, but you've reached the end of search results.");
+      loadMoreBtn.classList.add('is-hidden');
+    }
+    
     })
     .catch(error => console.log(error));
 };
+
 
 
 function createGalleryMarkup(images) {

@@ -6,10 +6,10 @@
     const mainUrl = 'https://pixabay.com/api/?';
     const parametersUrl = '&image_type=photo&orientation=horizontal&safesearch=true';
 
-  async function fetchImages(searchQuery, page) {
+  async function fetchImages(searchQuery, page, perPage) {
 
     try {
-    const response = await axios.get(`${mainUrl}${API_KEY}&q=${searchQuery}${parametersUrl}&per_page=40&page=${page}`);
+    const response = await axios.get(`${mainUrl}${API_KEY}&q=${searchQuery}${parametersUrl}&per_page=${perPage}&page=${page}`);
         return response;
   } catch (error) {
         Notify.failure(error.message)
